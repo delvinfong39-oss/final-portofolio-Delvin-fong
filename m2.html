@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portofolio Delvin</title>
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #1f1c2c, #928dab);
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      transition: background 1s, color 0.5s;
+      overflow-x: hidden;
+    }
+    body.light {
+      background: linear-gradient(to right, #f2f2f2, #ffffff);
+      color: #222;
+    }
+
+    .lamp-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(255,255,255,0.1);
+      border: 2px solid #ffd700;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 0 10px #ffd700;
+      transition: all 0.4s ease;
+      z-index: 10;
+    }
+    .lamp-toggle:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px #fff;
+    }
+
+    .bg-anim {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -2; opacity: 0.4;
+      pointer-events: none;
+    }
+    #particles {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    nav {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      background: rgba(20,15,30, 0.27);
+      margin: 0; padding-top: 20px; padding-bottom: 5px;
+      z-index: 2;
+      position: sticky; top: 0;
+      backdrop-filter: blur(4px);
+    }
+    nav button {
+      background: #ffd700;
+      color: #111;
+      border: none;
+      font-weight: bold;
+      padding: 10px 23px;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-bottom: 12px;
+      font-size: 1rem;
+      transition: 0.25s;
+    }
+    nav button.active, nav button:hover { background: #fff5b5; }
+
+    section.tab { display: none; max-width: 1000px; margin: auto; padding: 2rem; }
+    section.tab.active { display: block; }
+
+    header {
+      text-align: center;
+      padding: 2rem 2rem 1.2rem 2rem;
+    }
+    header img.profile {
+      width: 150px;
+      border-radius: 50%;
+      box-shadow: 0 0 25px #ffd700;
+      animation: glow 2s infinite alternate;
+      margin-bottom: 1rem;
+    }
+    @keyframes glow {
+      from { box-shadow: 0 0 10px #fff; }
+      to { box-shadow: 0 0 25px #ffd700; }
+    }
+
+    h1 {
+      font-size: 2.7rem;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 10px #ffd700, 0 0 25px #ffef8a;
+      animation: textGlow 2s ease-in-out infinite alternate;
+    }
+    @keyframes textGlow {
+      from { text-shadow: 0 0 10px #ffd700; }
+      to { text-shadow: 0 0 35px #fff5b5, 0 0 60px #ffd700; }
+    }
+    h2 {
+      border-bottom: 2px solid #fff;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 10px #ffd700;
+    }
+
+    /* Tentang Saya */
+    .about {
+      text-align: center;
+      margin-top: 1.5rem;
+      position: relative;
+      z-index: 5;
+    }
+    .about img {
+      width: 250px;
+      max-width: 80%;
+      border-radius: 15px;
+      box-shadow: 0 0 20px #ffd700;
+      margin-bottom: 1rem;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .about img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 35px #fff5b5;
+    }
+    .about p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      max-width: 700px;
+      margin: auto;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 1rem;
+      border-radius: 10px;
+    }
+
+    /* Album */
+    .album {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+    }
+    .album img {
+      width: 250px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #fff;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .album img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px #ffd700;
+    }
+
+    /* Skill */
+    ul { list-style: none; padding: 0; }
+    li {
+      margin-bottom: 1rem;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1rem;
+      border-radius: 8px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    li:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 15px #ffd700;
+    }
+
+    /* Sertifikat - album pilihan di bagian SKILL */
+    .cert-controls {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .cert-controls button {
+      background: #ffd700;
+      border: none;
+      color: #111;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+    .cert-controls button:hover { background: #fff5b5; }
+
+    .certificates {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-top: 8px;
+      align-items: center;
+    }
+    .certificates img {
+      width: 100%;
+      height: 110px;
+      object-fit: cover;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 3px solid transparent;
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+      position: relative;
+    }
+    .certificates img:hover { transform: scale(1.02); }
+    .certificates img.selected {
+      border-color: #00ffc2;
+      box-shadow: 0 0 18px rgba(0,255,190,0.25);
+      transform: scale(1.03);
+    }
+    /* small check badge */
+    .cert-badge {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      padding: 3px 6px;
+      border-radius: 12px;
+      font-size: 12px;
+      display: none;
+      z-index: 3;
+    }
+    .cert-item { position: relative; }
+    .cert-item .cert-badge.show { display: inline-block; }
+
+    /* POPUP STORY */
+    .popup {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 100;
+      animation: fadeIn 0.5s ease forwards;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .popup img {
+      max-width: 80%;
+      max-height: 70%;
+      border-radius: 10px;
+      box-shadow: 0 0 20px #ffd700;
+      margin-bottom: 1rem;
+    }
+    .popup p {
+      color: #fff;
+      max-width: 70%;
+      text-align: center;
+      font-size: 1.1rem;
+    }
+    .popup button {
+      background: #ffd700;
+      border: none;
+      color: #000;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    .popup button:hover {
+      background: #fff;
+    }
+
+    .sosmed-links {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 1rem;
+    }
+    .sosmed-links a img {
+      width: 40px;
+      filter: drop-shadow(0 0 5px rgba(255,255,255,0.3));
+      transition: transform 0.3s, filter 0.3s;
+    }
+    .sosmed-links a img:hover {
+      transform: scale(1.2);
+      filter: drop-shadow(0 0 10px #ffd700);
+    }
+    form input, form textarea {
+      width: 100%;
+      margin-bottom: 1rem;
+      padding: 10px;
+      border-radius: 7px;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+    }
+    form button {
+      background: #ffd700;
+      border: none;
+      color: #111;
+      padding: 10px 22px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+      font-size:1rem;
+    }
+    form button:hover { background: #fff5b5; }
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.9rem;
+      color: #0c0a0a;
+    }
+    a { color: #ffd700; text-decoration: none; }
+
+    /* CV specific */
+    .cv-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+    .cv-card {
+      background: rgba(0,0,0,0.28);
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    }
+    .cv-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .cv-actions a, .cv-actions button {
+      background: #ffd700;
+      border: none;
+      color: #111;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    .cv-preview {
+      background: rgba(255,255,255,0.04);
+      padding: 8px;
+      border-radius: 8px;
+      min-height: 360px;
+    }
+    .cv-preview iframe {
+      width: 100%;
+      height: 100%;
+      min-height: 340px;
+      border-radius: 6px;
+      border: none;
+    }
+
+    /* printable area hidden from main unless printing */
+    .resume-printable {
+      display: none;
+      font-size: 14px;
+      color: #000;
+      background: #fff;
+      padding: 20px;
+    }
+
+    /* print styles */
+    @media print {
+      body * { visibility: hidden; }
+      .resume-printable, .resume-printable * { visibility: visible; }
+      .resume-printable { position: absolute; left: 0; top: 0; width: 100%; }
+    }
+
+    /* responsive tweaks */
+    @media (max-width: 900px) {
+      .cv-container { grid-template-columns: 1fr; }
+      header h1 { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Tombol Lampu -->
+  <div class="lamp-toggle" id="lampToggle" title="Klik untuk ubah mode 💡">💡</div>
+
+  <!-- Background Animasi -->
+  <div class="bg-anim">
+    <lottie-player src="https://assets4.lottiefiles.com/packages/lf20_3rwasyjy.json"
+      background="transparent" speed="1" loop autoplay></lottie-player>
+  </div>
+
+  <!-- Partikel -->
+  <canvas id="particles"></canvas>
+
+  <!-- NAV -->
+  <nav>
+    <button data-tab="beranda" class="active">Beranda</button>
+    <button data-tab="album">Album</button>
+    <button data-tab="skill">Skill</button>
+    <button data-tab="cv">CV</button>
+    <button data-tab="contact">Kontak</button>
+  </nav>
+
+  <!-- HEADER -->
+  <header>
+    <img src="yud(1).jpg" alt="Foto Delvin" class="profile" />
+    <h1>Portofolio DELVIN FONG</h1>
+    <p class="tagline">Coding dengan gaya, desain dengan hati. Kerjakan tugas dengan emosi.</p>
+  </header>
+
+  <!-- Tab: BERANDA -->
+  <section class="tab active" id="beranda">
+    <h2>Tentang Saya</h2>
+    <div class="about">
+      <img src="foto utama.jpg" alt="Foto Delvin" data-desc="halo salam kenal dari saya delvin fong">
+      <p>Halo, saya Delvin dari Medan, Sumatera Utara.<br>
+      Saat ini saya adalah mahasiswa program studi Informatika di Universitas Satya Terra Bhinneka.
+      Saya sedang menempuh perjalanan akademik dan ingin terus berkembang di dunia teknologi serta desain digital..
+      </p>
+    </div>
+  </section>
+<section class="tab active" id="beranda">
+  <!-- STORY 1 -->
+  <article class="story-row reveal-on-scroll">
+    <div class="story-media">
+      <img src="lkj.png" alt="Lomba Coding">
+    </div>
+    <div class="story-text">
+      <h3>publish artikel</h3>
+      <div class="meta">Medan • 2025</div>
+      <p class="excerpt">
+        untuk pertama kali saya belajar menbuat artikel dan saya berhasil publish.
+      </p>
+      <div class="story-actions">
+        <button class="btn-open-photo">Lihat Foto</button>
+        <button class="btn-read-more">Baca Selengkapnya</button>
+      </div>
+    </div>
+  </article>
+
+  <!-- STORY 2 -->
+  <article class="story-row reveal-on-scroll">
+    <div class="story-media">
+      <img src="hg.png" alt="Kerja Tim">
+    </div>
+    <div class="story-text">
+      <h3> Proyek mini web cafe vin opin</h3>
+      <div class="meta">medan • 2025</div>
+      <p class="excerpt">
+        Pengalaman menbuat mini web cafe adalah langka awal saya belajar progamming.
+      </p>
+      <div class="story-actions">
+        <button class="btn-open-photo">Lihat Foto</button>
+        <button class="btn-read-more">Baca Selengkapnya</button>
+      </div>
+    </div>
+  </article>
+  <!-- STORY 3 -->
+   <article class="story-row reveal-on-scroll">
+    <div class="story-media">
+    <img src="wee.png" alt="web Tani voice">
+   </div>
+   <div class="story-text">
+    <h3>pembuatan web Tani voive untuk perlombaan desain web</h3>
+    <div class="meta">medan •2025 </div>
+      <p class="excerpt">
+        saya menbuat web TANIVoice yang membantu para petani menjual hasil panen dan   dilengkapin ai yang mampu memtranslate suara petani.
+      </p>
+      <div class="story-actions">
+        <button class="btn-open-photo">Lihat foto</button>
+        <button class="btn-read-more">Baca selengkapnya</button>
+      </div>
+   </div>
+  </article>
+    
+
+</section>
+
+<style>
+.story-row { display:flex; gap:20px; align-items:center; background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); padding:16px; border-radius:12px; margin:20px 0; transform:translateY(16px); opacity:0; transition: transform .56s cubic-bezier(.2,.9,.3,1), opacity .56s; }
+.story-row.visible { transform:translateY(0); opacity:1; }
+.story-media { flex:0 0 280px; max-width:40%; border-radius:10px; overflow:hidden; cursor:pointer; }
+.story-media img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .36s; }
+.story-text { flex:1; min-width:0; }
+@media (max-width:820px){ .story-row { flex-direction:column; } .story-media{ width:100%; max-width:100%; } }
+</style>
+
+<!-- JS: reveal-on-scroll + tombol buka popup + read-more -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // 1) Reveal on scroll (IntersectionObserver)
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries, obs) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { root:null, rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+    document.querySelectorAll('.reveal-on-scroll').forEach(el => io.observe(el));
+  } else {
+    // fallback: langsung tampil
+    document.querySelectorAll('.reveal-on-scroll').forEach(el => el.classList.add('visible'));
+  }
+
+
+  function openGlobalPopup(src, desc) {
+    const existing = document.getElementById('popup');
+    if (existing) {
+      const img = existing.querySelector('#popupImg') || existing.querySelector('img');
+      const p = existing.querySelector('#popupDesc') || existing.querySelector('p');
+      if (img) img.src = src;
+      if (p) p.textContent = desc || '';
+      existing.style.display = 'flex';
+      return;
+    }
+    // fallback simple
+    let modal = document.getElementById('storyModalFallback');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'storyModalFallback';
+      modal.style = 'position:fixed;left:0;top:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);z-index:9999;';
+      modal.innerHTML = '<div style="max-width:900px;width:90%;text-align:center;padding:12px;"><img id="fmImg" style="max-width:100%;max-height:70vh;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,0.6)"><p id="fmDesc" style="color:#fff;margin-top:10px"></p><div style="margin-top:8px"><button id="fmClose" style="background:#ffd700;border:none;padding:8px 14px;border-radius:8px;cursor:pointer">Tutup</button></div></div>';
+      document.body.appendChild(modal);
+      modal.querySelector('#fmClose').addEventListener('click', () => modal.style.display = 'none');
+      modal.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
+    }
+    modal.style.display = 'flex';
+    modal.querySelector('#fmImg').src = src;
+    modal.querySelector('#fmDesc').textContent = desc || '';
+  }
+
+  // 3) Bind actions for story-row(s)
+  document.querySelectorAll('.story-row').forEach(row => {
+    const media = row.querySelector('.story-media');
+    const img = media && media.querySelector('img');
+    const btnOpen = row.querySelector('.btn-open-photo');
+    const btnRead = row.querySelector('.btn-read-more');
+    const excerpt = row.querySelector('.excerpt');
+    const desc = excerpt ? excerpt.textContent.trim() : '';
+
+    function open() { if (img) openGlobalPopup(img.src, desc); }
+
+    if (media) {
+      media.addEventListener('click', open);
+      media.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') open(); });
+    }
+    if (btnOpen) btnOpen.addEventListener('click', open);
+
+    if (btnRead && excerpt) {
+      // simple toggle expand
+      let full = excerpt.textContent;
+      let short = full.length > 140 ? full.slice(0,140) + '…' : full;
+      excerpt.dataset.full = full;
+      excerpt.dataset.short = short;
+      excerpt.textContent = short;
+      btnRead.addEventListener('click', () => {
+        if (excerpt.dataset.expanded === 'true') {
+          excerpt.textContent = excerpt.dataset.short;
+          excerpt.dataset.expanded = 'false';
+          btnRead.textContent = 'Baca Selengkapnya';
+        } else {
+          excerpt.textContent = excerpt.dataset.full;
+          excerpt.dataset.expanded = 'true';
+          btnRead.textContent = 'Tutup';
+        }
+      });
+    }
+  });
+});
+</script>
+
+<style>
+
+.story-row {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  padding: 16px;
+  border-radius: 12px;
+  margin: 20px 0;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+  overflow: hidden;
+  transform: translateY(16px);
+  opacity: 0;
+  transition: transform 560ms cubic-bezier(.2,.9,.3,1), opacity 560ms cubic-bezier(.2,.9,.3,1);
+  section.tab { display: none; }
+  section.tab.active { display: block; }
+ 
+}
+
+/* saat reveal-on-scroll menambahkan .visible */
+.story-row.visible { transform: translateY(0); opacity: 1; }
+
+.story-media {
+  flex: 0 0 280px;
+  max-width: 40%;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  cursor: pointer;
+}
+.story-media img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transition: transform 360ms ease, filter 360ms ease;
+  transform-origin: center;
+}
+.story-media:focus { outline: 3px solid rgba(255,215,0,0.25); }
+
+.story-media:hover img,
+.story-media:focus img {
+  transform: scale(1.04);
+  filter: saturate(1.06) brightness(1.02);
+}
+
+.story-text {
+  flex: 1;
+  min-width: 0;
+  color: inherit;
+}
+.story-text h3 {
+  margin: 0 0 6px 0;
+  font-size: 1.25rem;
+  letter-spacing: 0.2px;
+}
+.story-text .meta {
+  margin: 0 0 10px 0;
+  color: rgba(16, 8, 8, 0.8);
+  font-size: 0.9rem;
+}
+.story-text .excerpt {
+  margin: 0 0 12px 0;
+  line-height: 1.6;
+  color: rgba(24, 4, 4, 0.95);
+}
+
+/* tombol sederhana */
+.story-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.story-actions .btn-open-photo,
+.story-actions .btn-read-more {
+  background: #ffd700;
+  color: #111;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.story-actions .btn-read-more { background: rgba(255,255,255,0.08); color: #fff; }
+
+/* responsive: stack vertically on small screens */
+@media (max-width: 820px) {
+  .story-row { flex-direction: column; gap: 12px; }
+  .story-media { width: 100%; max-width: 100%; flex-basis: auto; }
+  .story-text { text-align: left; }
+}
+</style>
+
+<script>
+
+
+(function () {
+  function openGlobalPopup(src, desc) {
+    const existing = document.getElementById('popup');
+    if (existing) {
+      const img = existing.querySelector('#popupImg') || existing.querySelector('img');
+      const p = existing.querySelector('#popupDesc') || existing.querySelector('p');
+      if (img) img.src = src;
+      if (p) p.textContent = desc || '';
+      existing.style.display = 'flex';
+      return;
+    }
+    // fallback modal
+    let modal = document.getElementById('storyModalFallback');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'storyModalFallback';
+      modal.style = 'position:fixed;left:0;top:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);z-index:9999;';
+      modal.innerHTML = '<div style="max-width:900px;width:90%;text-align:center;padding:12px;"><img id="fmImg" style="max-width:100%;max-height:70vh;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,0.6)"><p id="fmDesc" style="color:#fff;margin-top:10px"></p><div style="margin-top:8px"><button id="fmClose" style="background:#ffd700;border:none;padding:8px 14px;border-radius:8px;cursor:pointer">Tutup</button></div></div>';
+      document.body.appendChild(modal);
+      modal.querySelector('#fmClose').addEventListener('click', () => modal.style.display = 'none');
+      modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
+    }
+    modal.style.display = 'flex';
+    modal.querySelector('#fmImg').src = src;
+    modal.querySelector('#fmDesc').textContent = desc || '';
+  }
+
+  // target element
+  const rows = document.querySelectorAll('.story-row');
+  rows.forEach(row => {
+    const media = row.querySelector('.story-media');
+    const img = media && media.querySelector('img');
+    const btn = row.querySelector('.btn-open-photo');
+    const desc = row.querySelector('.excerpt')?.textContent || row.dataset.desc || '';
+
+    function onOpen() {
+      if (img) {
+        // optionally trigger burst effect if createBurst exists
+        if (typeof createBurst === 'function') {
+          // calculate center position of image
+          const rect = img.getBoundingClientRect();
+          const cx = rect.left + rect.width/2 + window.scrollX;
+          const cy = rect.top + rect.height/2 + window.scrollY;
+          createBurst(cx, cy);
+        }
+        openGlobalPopup(img.src, desc);
+      }
+    }
+
+    if (media) {
+      media.addEventListener('click', onOpen);
+      media.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') onOpen(); });
+    }
+    if (btn) btn.addEventListener('click', onOpen);
+    // optional: read-more expand (simple toggle)
+    const readMore = row.querySelector('.btn-read-more');
+    if (readMore) {
+      readMore.addEventListener('click', () => {
+        const ex = row.querySelector('.excerpt');
+        if (!ex) return;
+        if (ex.dataset.expanded === 'true') {
+          ex.textContent = ex.dataset.short || ex.textContent;
+          ex.dataset.expanded = 'false';
+          readMore.textContent = 'Baca Selengkapnya';
+        } else {
+          // store short & show full (if you want longer content, set data-full on element)
+          if (!ex.dataset.full) ex.dataset.full = ex.textContent;
+          if (!ex.dataset.short) ex.dataset.short = ex.textContent.slice(0, 140) + (ex.textContent.length > 140 ? '…' : '');
+          ex.textContent = ex.dataset.full;
+          ex.dataset.expanded = 'true';
+          readMore.textContent = 'Tutup';
+        }
+      });
+    }
+  });
+
+  // Jika belum ada mekanisme reveal-on-scroll di halaman, pakai ini minimal:
+  if (!('IntersectionObserver' in window)) {
+    document.querySelectorAll('.reveal-on-scroll').forEach(el => el.classList.add('visible'));
+  }
+})();
+</script>
+  <!-- Tab: ALBUM -->
+  <section class="tab" id="album">
+    <h2>Album Story</h2>
+    <div class="album">
+      <img src="trm.jpg" alt="kata kata sikit" data-desc="kata kata sikit – terkadang bukan tidak mampu berjuang namun lebih memilih untuk sadar diri ~.">
+      <img src="pqw.jpg" alt="kalimat sadboy" data-desc="kalimat sadboy – wajah yang selalu ku ingikan sekarang seperti kenangan hal kisah walau hanya sementara namun perasaan ini selamanya.">
+      <img src="fwq.jpg" alt="Delvin sad" data-desc="Delvin sad – mata yang indah sifat yang baik mungkin hanya sampai disitu saja kesempatan ku megenal mu!">
+      <img src="akhiri.jpg" alt="akhir kisah" data-desc="Delvin sad – pada akhirnya diri ini hanya melelahkan mu tanpa ada kisah memilikimu!">
+      <img src="hal.jpg" alt="Delvin sad" data-desc="Delvin sad – aku kembali beranda ditempat yang kamu suka tanpa dirimu !">
+      <img src="malam.jpg" alt="Delvin sad" data-desc="Delvin sad – malam ini dunia terasa dingin menunggu pesan yang tak terbalas darimu!">
+      <img src="WhatsApp Image 2025-12-07 at 18.35.49_64d1d203.jpg" alt="Delvin sad" data-desc="Delvin sad – sejauh apapun aku pergi dirimu tetap dekat dipikiran ku!">
+      <img src="lkp.jpg"alt="Delvin"data-desc="jangan suka remehkan anak orang soalnya dia harapan kedua orang tuanya">
+      <img src="wp.jpg"alt="vin"data-desc="keberhasilan didapatkan oleh manusia yang bisa melawan dirinya sendiri">
+    </div>
+  </section>
+
+  <!-- Tab: SKILL -->
+  <section class="tab" id="skill">
+    <h2>Skill Utama</h2>
+   <ul>
+      <li><strong>Frontend:</strong> HTML, CSS, JavaScript, React</li>
+      <li><strong>Backend:</strong> Logika pemrograman & API</li>
+      <li><strong>Database:</strong> MySQL & Firebase</li>
+      <li><strong>Desain UI/UX:</strong> Animasi, efek sinematik, layout dinamis</li>
+    </ul>
+
+    <!-- Sertifikat: album pilihan foto -->
+    <h3>Sertifikat (Pilih foto untuk menandai)</h3>
+    <div class="cert-controls">
+      <button id="showSelectedBtn">Lihat Terpilih (0)</button>
+      <button id="clearSelection">Bersihkan Pilihan</button>
+    </div>
+
+    <div class="certificates">
+      <div class="cert-item"><span class="cert-badge">✔</span><img src="s.jpg" alt="Sertifikat 1" data-desc=""></div>
+      <div class="cert-item"><span class="cert-badge">✔</span><img src="certificate (2)_page-0001.jpg" alt="Sertifikat 2" data-desc=""></div>
+      <div class="cert-item"><span class="cert-badge">✔</span><img src="Conversion_page-0001.jpg" alt="Sertifikat 3" data-desc=""></div>
+      <div class="cert-item"><span class="cert-badge">✔</span><img src="vin.png" alt="Sertifikat 4" data-desc=""></div>
+      <div class="cert-item"><span class="cert-badge">✔</span><img src="Delvin.png" alt="Sertifikat 5" data-desc=""></div>
+      <div class="cert-item"><span class="cert-badge">✔</span><img src="sertifikat_16_feb_25[1]_page-0001.jpg"alt="sertifikat 6"data-desc="sertifikat 6"></div>
+      <div class="cert-item"><span class="cert-badge">✔</span><img src="nm.jpg"alt= ""data-desc=""></div>
+      <div class="cert-item"><span class="cert-badge">✔</span><img src="fong.jpg"alt=""data-desc=""></div>
+      
+    </div>
+  </section>
+
+  <!-- Tab: CV / Riwayat -->
+  <section class="tab" id="cv">
+    <h2>CV / Riwayat Hidup</h2>
+    <div class="cv-container">
+      <div class="cv-card">
+        <h3>Delvin Fong</h3>
+        <p><strong>Lokasi:</strong> Medan, Sumatera Utara</p>
+        <p><strong>Email:</strong> <a href="mailto:delvinfong39@gmail.com">delvinfong39@gmail.com</a></p>
+        <p><strong>nomor Telepon:</strong>+62 0882-0161-17538</p>
+        <p><strong>Ringkasan:</strong><br>
+        Mahasiswa Informatika, berfokus pada frontend & desain UI/UX. Passion pada animasi web, pengalaman kerja tim, dan pembuatan proyek portofolio.</p>
+
+        <h4>Pendidikan</h4>
+        <ul>
+          <li>2024 - Sekarang: S1 Informatika, Universitas Satya Terra Bhinneka</li>
+          <li>2021- 2024: SMA ips penguruan singosari</li>
+          <li>2019-2021: SMP penguruan singosari</li>
+          <li>2012-2019: SD negeri 06</li>
+
+        </ul>
+
+        <h4>Pengalaman/Proyek</h4>
+        <ul>
+          <li>Proyek Portofolio pribadi — Frontend dengan animasi dan interaksi.</li>
+          <li>mini proyek web cafe vin opin.</li>
+          <li>desain web Tanivoice</li>
+          <li>pembuatan artikel </li>
+
+        </ul>
+
+        <h4>Keahlian Teknis</h4>
+        <ul>
+          <li>HTML, CSS, JavaScript</li>
+          <li>MySQL, Firebase</li>
+          <li>Desain UI/UX, animasi web</li>
+          
+        </ul>
+
+        <div class="cv-actions">
+          <!-- Pastikan file delvin_cv.pdf tersedia di folder yang sama atau ganti path -->
+          <a id="downloadCv" href="Delvin fong.pdf" download>Download CV (PDF)</a>
+          <button id="openCvModal">Lihat Preview</button>
+        </div>
+      </div>
+
+      <div class="cv-preview">
+        <iframe id="cvIframe" src="Delvin fong.pdf" title="Preview CV (letakkan delvin_cv.pdf di folder yang sama)"></iframe>
+      </div>
+    </div>
+
+    <!-- Hidden printable content (will be visible in print) -->
+    <div id="printArea" class="resume-printable" aria-hidden="true">
+      <h1>Delvin Fong</h1>
+      <p><strong>Lokasi:</strong> Medan, Sumatera Utara</p>
+      <p><strong>Email:</strong> delvinfong39@gmail.com</p>
+      <h3>Ringkasan</h3>
+      <p>Mahasiswa Informatika berfokus pada frontend & desain UI/UX. Pengalaman membuat proyek portofolio dan sertifikat terkait</p>
+      <h3>Pendidikan</h3>
+      <ul>
+        <li>2024 - Sekarang: S1 Informatika, Universitas Satya Terra Bhinneka</li>
+      </ul>
+      <h3>Pengalaman</h3>
+      <ul>
+        <li>Proyek Portofolio pribadi — Frontend & animasi</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="tab" id="contact">
+    <h2>Hubungi Saya</h2>
+    <div class="sosmed-links">
+      <a href="https://www.instagram.com/besuken7?igsh=MnNwM3M0cmdzbzJz" target="_blank">
+        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" />
+      </a>
+      <a href="https://www.facebook.com/share/16S4afiEP7/" target="_blank">
+        <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" />
+      </a>
+      <a href="https://youtube.com/@delvinfong?si=4GlmpUSpNEcft9nZ"target="_blank">
+        <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="YouTube" />
+      </a>
+    </div>
+    <br>
+    <form>
+      <input type="text" placeholder="Nama" required><br>
+      <input type="email" placeholder="Email" required><br>
+      <textarea placeholder="Pesan..." required></textarea><br>
+      <button type="submit">Kirim</button>
+    </form>
+    <br>
+    <footer>
+      &copy; 2025 Delvin. Dibuat dengan semangat dan percaya diri.<br>
+    </footer>
+  </section>
+
+  <!-- POPUP STORY (tetap di bawah untuk seluruh halaman) -->
+  <div class="popup" id="popup">
+    <img id="popupImg" src="s.jpg" alt="">
+    <p id="popupDesc"></p>
+    <button id="closePopup">Tutup</button>
+  </div>
+
+  <!-- POPUP KHUSUS SERTIFIKAT (navigasi prev/next) -->
+  <div class="popup" id="certPopup" aria-hidden="true">
+    <img id="certPopupImg" src="" alt="">
+    <p id="certPopupDesc"></p>
+    <div style="display:flex;gap:12px;margin-top:10px;">
+      <button id="prevCert">Sebelumnya</button>
+      <button id="nextCert">Selanjutnya</button>
+      <button id="closeCertPopup">Tutup</button>
+    </div>
+  </div>
+
+  <!-- Modal preview CV sederhana -->
+  <div class="popup" id="cvModal" aria-hidden="true">
+    <div style="width:90%; max-width:900px; height:80%; background:transparent;">
+      <iframe id="cvModalIframe" src="Delvin fong.pdf" style="width:100%;height:100%;border:none;border-radius:8px;"></iframe>
+    </div>
+    <div style="margin-top:10px;">
+      <button id="closeCvModal">Tutup</button>
+    </div>
+  </div>
+
+  <script>
+    // === TOGGLE MODE TERANG/GELAP ===
+    const lampButton = document.getElementById('lampToggle');
+    lampButton.addEventListener('click', () => {
+      document.body.classList.toggle('light');
+    });
+
+    // === TABS / NAVIGASI ===
+    const navButtons = document.querySelectorAll('nav button');
+    const tabs = document.querySelectorAll('section.tab');
+    navButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        navButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        tabs.forEach(tab => {
+          tab.classList.remove('active');
+          if(tab.id === btn.dataset.tab) tab.classList.add('active');
+        });
+      });
+    });
+
+    // === POPUP STORY untuk ALBUM biasa ===
+    function assignAlbumPopup(){
+      const images = document.querySelectorAll('.album img');
+      const popup = document.getElementById('popup');
+      const popupImg = document.getElementById('popupImg');
+      const popupDesc = document.getElementById('popupDesc');
+      const closePopup = document.getElementById('closePopup');
+
+      images.forEach(img => {
+        img.addEventListener('click', () => {
+          popup.style.display = 'flex';
+          popupImg.src = img.src;
+          popupDesc.textContent = img.dataset.desc || '';
+        });
+      });
+      closePopup.addEventListener('click', () => popup.style.display = 'none');
+    }
+    assignAlbumPopup();
+
+    // === PARTIKEL CAHAYA ===
+    const canvas = document.getElementById("particles");
+    const ctx = canvas.getContext("2d");
+    function resizeCanvas(){
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    let particlesArray = [];
+    class Particle {
+      constructor(x, y, size, speedX, speedY) {
+        this.x = x; this.y = y;
+        this.size = size; this.speedX = speedX; this.speedY = speedY;
+      }
+      update() {
+        this.x += this.speedX; this.y += this.speedY;
+        if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
+        if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
+      }
+      draw() {
+        ctx.fillStyle = "rgba(255, 215, 0, 0.6)";
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function initParticles() {
+      particlesArray = [];
+      for (let i = 0; i < 80; i++) {
+        const size = Math.random() * 2;
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const speedX = (Math.random() - 0.5) * 0.5;
+        const speedY = (Math.random() - 0.5) * 0.5;
+        particlesArray.push(new Particle(x, y, size, speedX, speedY));
+      }
+    }
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particlesArray.forEach(p => { p.update(); p.draw(); });
+      requestAnimationFrame(animateParticles);
+    }
+    window.addEventListener("resize", () => {
+      resizeCanvas();
+      initParticles();
+    });
+    initParticles();
+    animateParticles();
+
+    // === SERTIFIKAT: album pilihan di bagian SKILL ===
+    (function setupCertificateSelection() {
+      const certItems = document.querySelectorAll('.cert-item');
+      const showSelectedBtn = document.getElementById('showSelectedBtn');
+      const clearSelectionBtn = document.getElementById('clearSelection');
+      const certPopup = document.getElementById('certPopup');
+      const certPopupImg = document.getElementById('certPopupImg');
+      const certPopupDesc = document.getElementById('certPopupDesc');
+      const prevCertBtn = document.getElementById('prevCert');
+      const nextCertBtn = document.getElementById('nextCert');
+      const closeCertPopup = document.getElementById('closeCertPopup');
+
+      let selectedList = []; // array of {src, desc}
+      let currentIndex = 0;
+
+      function updateSelectionState() {
+        const selectedImgs = document.querySelectorAll('.certificates img.selected');
+        selectedList = Array.from(selectedImgs).map(img => ({ src: img.src, desc: img.dataset.desc || '' }));
+        showSelectedBtn.textContent = `Lihat Terpilih (${selectedList.length})`;
+        // show/hide badges
+        certItems.forEach(item => {
+          const img = item.querySelector('img');
+          const badge = item.querySelector('.cert-badge');
+          if (img.classList.contains('selected')) badge.classList.add('show'); else badge.classList.remove('show');
+        });
+      }
+
+      // Toggle selection on click
+      certItems.forEach(item => {
+        const img = item.querySelector('img');
+        item.addEventListener('click', (e) => {
+          // Only toggle when clicking the image or its container
+          img.classList.toggle('selected');
+          updateSelectionState();
+        });
+      });
+
+      showSelectedBtn.addEventListener('click', () => {
+        if (selectedList.length === 0) {
+          alert('Belum ada sertifikat yang dipilih. Klik gambar untuk memilih.');
+          return;
+        }
+        currentIndex = 0;
+        openCertPopup(currentIndex);
+      });
+
+      clearSelectionBtn.addEventListener('click', () => {
+        document.querySelectorAll('.certificates img.selected').forEach(i => i.classList.remove('selected'));
+        updateSelectionState();
+      });
+
+      function openCertPopup(index) {
+        const item = selectedList[index];
+        if (!item) return;
+        certPopupImg.src = item.src;
+        certPopupDesc.textContent = item.desc || '';
+        certPopup.style.display = 'flex';
+        certPopup.setAttribute('aria-hidden','false');
+      }
+      function closeCertPopupFn() {
+        certPopup.style.display = 'none';
+        certPopup.setAttribute('aria-hidden','true');
+      }
+
+      prevCertBtn.addEventListener('click', () => {
+        if (selectedList.length === 0) return;
+        currentIndex = (currentIndex - 1 + selectedList.length) % selectedList.length;
+        openCertPopup(currentIndex);
+      });
+      nextCertBtn.addEventListener('click', () => {
+        if (selectedList.length === 0) return;
+        currentIndex = (currentIndex + 1) % selectedList.length;
+        openCertPopup(currentIndex);
+      });
+      closeCertPopup.addEventListener('click', closeCertPopupFn);
+
+      // Close on click outside image
+      certPopup.addEventListener('click', (e) => {
+        if (e.target === certPopup) closeCertPopupFn();
+      });
+
+      // Initialize badge states
+      updateSelectionState();
+    })();
+
+    // === CV: preview modal dan print ===
+    const openCvModalBtn = document.getElementById('openCvModal');
+    const cvModal = document.getElementById('cvModal');
+    const closeCvModalBtn = document.getElementById('closeCvModal');
+    const printCvBtn = document.getElementById('printCvBtn');
+
+    if (openCvModalBtn && cvModal && closeCvModalBtn) {
+      openCvModalBtn.addEventListener('click', () => {
+        cvModal.style.display = 'flex';
+        cvModal.setAttribute('aria-hidden','false');
+      });
+      closeCvModalBtn.addEventListener('click', () => {
+        cvModal.style.display = 'none';
+        cvModal.setAttribute('aria-hidden','true');
+      });
+      // close when clicking outside
+      cvModal.addEventListener('click', (e) => {
+        if (e.target === cvModal) {
+          cvModal.style.display = 'none';
+          cvModal.setAttribute('aria-hidden','true');
+        }
+      });
+    }
+
+    if (printCvBtn) {
+      printCvBtn.addEventListener('click', () => {
+        // Gunakan area printArea untuk mencetak
+        window.print();
+      });
+    }
+
+    // Improve UX: if iframe can't load (no PDF), show a message
+    const cvIframe = document.getElementById('cvIframe');
+    cvIframe.addEventListener('error', () => {
+      // fallback: tunjukkan teks kalau PDF tidak ditemukan
+      cvIframe.style.display = 'none';
+      const parent = cvIframe.parentElement;
+      const msg = document.createElement('div');
+      msg.style.padding = '20px';
+      msg.style.color = '#fff';
+      msg.textContent = 'Preview CV tidak tersedia. Pastikan file delvin_cv.pdf ada di folder yang sama.';
+      parent.appendChild(msg);
+    });
+
+    // Small enhancement: set active nav based on hash (optional)
+    function activateFromHash() {
+      const hash = location.hash.replace('#','');
+      if (!hash) return;
+      const btn = Array.from(navButtons).find(b => b.dataset.tab === hash);
+      if (btn) btn.click();
+    }
+    window.addEventListener('load', activateFromHash);
+    window.addEventListener('hashchange', activateFromHash);
+  </script>
+</body>
+</html>
